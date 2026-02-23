@@ -1,10 +1,10 @@
 "use client";
 import { useMemo } from "react";
-import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { useWallet as useSolanaWallet, useConnection } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 export function useWallet() {
-  const wallet = useWallet();
+  const wallet = useSolanaWallet();
   const { connection } = useConnection();
 
   const isTestnet = useMemo(() => {
@@ -45,7 +45,7 @@ export function useWallet() {
  * Use this in components that need to sign transactions or send instructions.
  */
 export function useSolanaSigner() {
-  const wallet = useWallet();
+  const wallet = useSolanaWallet();
   const { connection } = useConnection();
 
   const getSigner = useMemo(() => {
