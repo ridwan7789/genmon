@@ -55,7 +55,6 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new BackpackWalletAdapter(),
     ],
     []
   );
