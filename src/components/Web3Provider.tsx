@@ -41,8 +41,13 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   const endpoint = useMemo(() => {
     // Check if we should use mainnet (can be controlled via env var)
     const useMainnet = process.env.NEXT_PUBLIC_SOLANA_MAINNET === "true";
-    return useMainnet 
-      ? "https://api.mainnet-beta.solana.com" 
+    
+    // Use custom RPC if provided, otherwise use default endpoints
+    const customRpc = process.env.NEXT_PUBLIC_SOLANA_RPC_URL;
+    if (customRpc) return customRpc;
+    
+    return useMainnet
+      ? "https://api.mainnet-beta.solana.com"
       : clusterApiUrl("devnet");
   }, []);
 
