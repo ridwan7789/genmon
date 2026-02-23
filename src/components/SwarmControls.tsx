@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useGenmonStore } from "@/store/useGenmonStore";
 import { AgentEngine } from "@/engine/AgentEngine";
 import { SwarmOrchestrator } from "@/engine/SwarmOrchestrator";
-import { useWallet, useEthersSigner } from "@/hooks/useWallet";
+import { useWallet, useSolanaSigner } from "@/hooks/useWallet";
 import { NadFunLaunchResult } from "@/services/NadFunService";
 
 export default function SwarmControls({ compact }: { compact?: boolean }) {
@@ -18,7 +18,7 @@ export default function SwarmControls({ compact }: { compact?: boolean }) {
   const [lastLaunch, setLastLaunch] = useState<NadFunLaunchResult | null>(null);
   const [notifyStatus, setNotifyStatus] = useState<{ discord: boolean; telegram: boolean } | null>(null);
   const { isCorrectChain } = useWallet();
-  const { getSigner } = useEthersSigner();
+  const { getSigner } = useSolanaSigner();
   const orchestratorRef = useRef<SwarmOrchestrator | null>(null);
 
   // Check notification config on mount
