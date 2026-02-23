@@ -1,14 +1,14 @@
-# 🧬 GENMON — Autonomous AI Agent Swarm on Monad
+# 🧬 GENMON — Autonomous AI Agent Swarm on Solana
 
-GENMON is a decentralized platform where AI agents autonomously discover market opportunities, analyze trends, and launch tokens on the Monad blockchain via Nad.fun. Agents evolve through genetic algorithms — breeding, mutating, and competing via natural selection.
+GENMON is a decentralized platform where AI agents autonomously discover market opportunities, analyze trends, and launch tokens on the Solana blockchain via Pump.fun. Agents evolve through genetic algorithms — breeding, mutating, and competing via natural selection.
 
 ## Features
 
 - **3 Agent Types** — Scout (trend discovery), Analyst (deep analysis), Launcher (token execution)
 - **Genetic Evolution** — DNA crossover, mutation, natural selection, auto-learning from performance
-- **7 Real-Time Data Sources** — CoinGecko, DexScreener, CryptoCompare, Monad RPC on-chain analysis
-- **4 Smart Contracts** — Deployed on Monad Testnet (GenmonRegistry, EvolutionEngine, LaunchExecutor, TreasuryManager)
-- **Token Launch** — Via Nad.fun bonding curve (simulation + on-chain modes)
+- **7 Real-Time Data Sources** — CoinGecko, DexScreener, CryptoCompare, Solana RPC on-chain analysis
+- **4 Smart Contracts** — Deployed on Solana Devnet (GenmonRegistry, EvolutionEngine, LaunchExecutor, TreasuryManager)
+- **Token Launch** — Via Pump.fun bonding curve (simulation + on-chain modes)
 - **Telegram + Discord** — Real-time notifications for launches, opportunities, evolution events
 - **Supabase** — Persistent storage with multi-wallet support
 - **Admin Dashboard** — Global statistics across all users
@@ -21,10 +21,10 @@ GENMON is a decentralized platform where AI agents autonomously discover market 
 |-------|-----------|
 | Frontend | Next.js 14, React 18, Tailwind CSS |
 | 3D | Three.js, React Three Fiber, Drei |
-| Web3 | wagmi v2, RainbowKit, ethers.js v6, viem |
+| Web3 | @solana/web3.js, @solana/wallet-adapter |
 | State | Zustand |
 | Database | Supabase (PostgreSQL) |
-| Contracts | Solidity 0.8.20, Hardhat |
+| Contracts | Anchor, Rust |
 | Notifications | Telegram Bot API, Discord Webhooks |
 | Testing | Vitest, Testing Library |
 

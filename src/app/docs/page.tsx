@@ -108,7 +108,7 @@ export default function DocsPage() {
               <a href="https://moltiverse.dev" target="_blank" rel="noopener" className="text-cyan-400/60 hover:text-cyan-400 transition-colors">
                 Moltiverse Hackathon
               </a>
-              {" "}by Nad.fun × Monad
+              {" "}by Pump.fun × Solana
             </p>
             <div className="flex items-center justify-center gap-4 mt-2">
               <a href="https://github.com/dodechaedron/GENMON-Autonomous-AI-Agent-Swarm" target="_blank" rel="noopener" className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors">GitHub</a>

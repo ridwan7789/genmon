@@ -14,14 +14,14 @@ module.exports = {
     sources: "./contracts",
   },
   networks: {
-    monadTestnet: {
-      url: "https://testnet-rpc.monad.xyz",
-      chainId: 10143,
+    solanaDevnet: {
+      url: "https://api.devnet.solana.com",
+      chainId: 101,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
-    monadMainnet: {
-      url: "https://rpc.monad.xyz",
-      chainId: 143,
+    solanaMainnet: {
+      url: "https://api.mainnet-beta.solana.com",
+      chainId: 101,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },

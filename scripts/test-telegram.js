@@ -33,7 +33,7 @@ async function test() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: CHAT_ID,
-      text: "🧬 <b>GENMON Alert Bot — Online!</b>\n\n✅ Bot successfully connected.\n\nYou will receive real-time alerts for:\n🚀 Token launches\n💎 High-score opportunities\n🧬 Agent evolution &amp; breeding\n📈 Performance tracking\n\n<i>— GENMON Swarm Intelligence on Monad</i>",
+      text: "🧬 <b>GENMON Alert Bot — Online!</b>\n\n✅ Bot successfully connected.\n\nYou will receive real-time alerts for:\n🚀 Token launches\n💎 High-score opportunities\n🧬 Agent evolution &amp; breeding\n📈 Performance tracking\n\n<i>— GENMON Swarm Intelligence on Solana</i>",
       parse_mode: "HTML",
       disable_web_page_preview: true,
     }),

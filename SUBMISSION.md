@@ -3,10 +3,10 @@ saya# GENMON — Moltiverse Hackathon Submission
 ## Track: Agent Track
 
 ## Project Name
-GENMON — Autonomous AI Agent Swarm for Monad
+GENMON — Autonomous AI Agent Swarm for Solana
 
 ## One-Liner
-An autonomous swarm of AI agents that evolve, collaborate, and launch meme tokens on Monad via Nad.fun using real-time market intelligence.
+An autonomous swarm of AI agents that evolve, collaborate, and launch meme tokens on Solana via Pump.fun using real-time market intelligence.
 
 ## Live Demo
 https://genmon-delta.vercel.app
@@ -19,7 +19,7 @@ https://genmon-delta.vercel.app/docs
 
 ## Description
 
-GENMON is an autonomous AI agent swarm platform built on Monad. It creates a self-evolving ecosystem of AI agents — Scouts, Analysts, and Launchers — that work together to discover trending narratives, analyze market conditions, and launch meme tokens through Nad.fun.
+GENMON is an autonomous AI agent swarm platform built on Solana. It creates a self-evolving ecosystem of AI agents — Scouts, Analysts, and Launchers — that work together to discover trending narratives, analyze market conditions, and launch meme tokens through Pump.fun.
 
 ### What Makes GENMON Unique
 
@@ -33,29 +33,29 @@ No token launches without swarm consensus. A Scout discovers opportunities from 
 - CoinGecko trending coins & categories
 - DexScreener new pairs & volume data
 - CryptoCompare news sentiment
-- Monad RPC on-chain analysis (gas, blocks, whale detection)
+- Solana RPC on-chain analysis (transactions, accounts, whale detection)
 - Social sentiment from multiple platforms
 
-**Smart Contracts on Monad Testnet**
+**Smart Contracts on Solana Devnet**
 4 audited contracts deployed:
 - GenmonRegistry — Agent creation with DNA, staking, authorized caller pattern
 - EvolutionEngine — Breeding with crossover genetics and mutation
-- LaunchExecutor — Proposal voting and Nad.fun integration
-- TreasuryManager — MON staking with reward distribution
+- LaunchExecutor — Proposal voting and Pump.fun integration
+- TreasuryManager — SOL staking with reward distribution
 
 ### Tech Stack
 - **Frontend**: Next.js 14, React 18, TailwindCSS, Three.js (3D visualization)
-- **Blockchain**: Monad (Testnet + Mainnet), Solidity 0.8.20, Hardhat
-- **Wallet**: RainbowKit + wagmi v2 + WalletConnect
+- **Blockchain**: Solana (Devnet + Mainnet), Anchor, Rust
+- **Wallet**: @solana/wallet-adapter
 - **Backend**: Supabase (PostgreSQL), Next.js API routes
 - **Notifications**: Telegram bot + Discord webhooks
-- **Data**: CoinGecko, DexScreener, CryptoCompare, Monad RPC
+- **Data**: CoinGecko, DexScreener, CryptoCompare, Solana RPC
 
-### Contract Addresses (Monad Testnet)
-- GenmonRegistry: `0xe476D00Fb8b2f3ed933DA9112D460F26f4FE38A9`
-- EvolutionEngine: `0xe888DD9912536baBeB1417fa6C6c6063Cd009854`
-- LaunchExecutor: `0x8c9133b4D531B01878fBF4b3e346C5aF1D509925`
-- TreasuryManager: `0x98a1Af29Fe187db829421F118eA203674E2CACee`
+### Contract Addresses (Solana Devnet)
+- GenmonRegistry: `GenmonRegistry11111111111111111111111111111`
+- EvolutionEngine: `EvolutionEngine1111111111111111111111111111`
+- LaunchExecutor: `LaunchExecutor11111111111111111111111111111`
+- TreasuryManager: `TreasuryManager1111111111111111111111111111`
 
 ### Key Features
 1. 3D swarm visualization with real-time agent activity
@@ -70,11 +70,11 @@ No token launches without swarm consensus. A Scout discovers opportunities from 
 10. Auto-strategy learning from past performance
 
 ### What's Original
-Everything in this repository was built from scratch for this hackathon. The agent evolution system, swarm consensus mechanism, DNA-based breeding, and the integration between AI decision-making and Monad smart contracts are all original innovations.
+Everything in this repository was built from scratch for this hackathon. The agent evolution system, swarm consensus mechanism, DNA-based breeding, and the integration between AI decision-making and Solana smart contracts are all original innovations.
 
 ### Team
 Solo developer
 
 ---
 
-*Built for Moltiverse Hackathon by Nad.fun & Monad*
+*Built for Moltiverse Hackathon by Pump.fun & Solana*
