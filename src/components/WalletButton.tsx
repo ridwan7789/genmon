@@ -1,82 +1,74 @@
 "use client";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { useEffect, useState } from "react";
 
 export default function WalletButton() {
+  const { connected, publicKey, wallet, disconnect } = useWallet();
+  const { connection } = useConnection();
+  const [balance, setBalance] = useState<number | null>(null);
+  const [isTestnet, setIsTestnet] = useState(true);
+
+  // Fetch balance when connected
+  useEffect(() => {
+    if (!publicKey || !connection) return;
+
+    const getBalance = async () => {
+      try {
+        const bal = await connection.getBalance(publicKey);
+        setBalance(bal / LAMPORTS_PER_SOL);
+        
+        // Check if devnet or mainnet
+        const endpoint = connection.rpcEndpoint;
+        setIsTestnet(endpoint.includes("devnet"));
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+      }
+    };
+
+    getBalance();
+    
+    // Subscribe to balance changes
+    const subscription = connection.onAccountChange(publicKey, (accountInfo) => {
+      setBalance(accountInfo.lamports / LAMPORTS_PER_SOL);
+    });
+
+    return () => {
+      connection.removeAccountChangeListener(subscription);
+    };
+  }, [publicKey, connection]);
+
+  // Custom styled WalletMultiButton
   return (
-    <ConnectButton.Custom>
-      {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
-        const ready = mounted;
-        const connected = ready && account && chain;
-
-        return (
+    <div className="flex items-center gap-1.5">
+      {connected && publicKey && (
+        <>
+          {/* Network indicator */}
           <div
-            {...(!ready && {
-              "aria-hidden": true,
-              style: { opacity: 0, pointerEvents: "none" as const, userSelect: "none" as const },
-            })}
-            className="flex items-center gap-1.5"
+            className={`px-2 py-1.5 rounded-lg border text-[10px] font-medium transition-all ${
+              isTestnet
+                ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
+                : "border-green-500/30 bg-green-500/10 text-green-400"
+            }`}
+            title={isTestnet ? "Solana Devnet" : "Solana Mainnet"}
           >
-            {(() => {
-              if (!connected) {
-                return (
-                  <button
-                    onClick={openConnectModal}
-                    className="px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-cyan/20 to-purple/20 border border-cyan/40 text-cyan text-xs sm:text-sm hover:from-cyan/30 hover:to-purple/30 transition-all active:scale-95"
-                  >
-                    Connect Wallet
-                  </button>
-                );
-              }
-
-              if (chain.unsupported) {
-                return (
-                  <button
-                    onClick={openChainModal}
-                    className="px-3 py-1.5 rounded-lg border border-yellow-500/50 text-yellow-400 text-xs hover:bg-yellow-500/10 transition-all"
-                  >
-                    Wrong Network
-                  </button>
-                );
-              }
-
-              const isTestnet = chain.id === 10143;
-
-              return (
-                <div className="flex items-center gap-1.5">
-                  {/* Network switch button */}
-                  <button
-                    onClick={openChainModal}
-                    className={`px-2 py-1.5 rounded-lg border text-[10px] font-medium transition-all hover:opacity-80 active:scale-95 ${
-                      isTestnet
-                        ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
-                        : "border-green-500/30 bg-green-500/10 text-green-400"
-                    }`}
-                    title="Click to switch network"
-                  >
-                    <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${isTestnet ? "bg-yellow-400" : "bg-green-400"}`} />
-                    {isTestnet ? "Testnet" : "Mainnet"}
-                  </button>
-
-                  {/* Balance */}
-                  <span className="text-[10px] text-gray-500 hidden sm:inline">
-                    {account.balanceFormatted
-                      ? `${parseFloat(account.balanceFormatted).toFixed(3)} ${account.balanceSymbol}`
-                      : ""}
-                  </span>
-
-                  {/* Account */}
-                  <button
-                    onClick={openAccountModal}
-                    className="px-3 py-1.5 rounded-lg border border-cyan/30 bg-cyan/5 text-cyan text-xs hover:bg-cyan/10 transition-all"
-                  >
-                    {account.displayName}
-                  </button>
-                </div>
-              );
-            })()}
+            <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${isTestnet ? "bg-yellow-400" : "bg-green-400"}`} />
+            {isTestnet ? "Devnet" : "Mainnet"}
           </div>
-        );
-      }}
-    </ConnectButton.Custom>
+
+          {/* Balance display */}
+          {balance !== null && (
+            <span className="text-[10px] text-gray-500 hidden sm:inline">
+              {balance.toFixed(3)} SOL
+            </span>
+          )}
+        </>
+      )}
+
+      {/* Custom styled wallet button */}
+      <WalletMultiButton />
+    </div>
   );
 }

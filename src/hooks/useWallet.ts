@@ -1,78 +1,69 @@
 "use client";
 import { useMemo } from "react";
-import { useAccount, useBalance, useChainId } from "wagmi";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { ethers } from "ethers";
-import { formatUnits } from "viem";
-import { TESTNET_CHAIN_ID, MAINNET_CHAIN_ID } from "@/config/wagmi";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 export function useWallet() {
-  const { address, isConnecting, isConnected, connector } = useAccount();
-  const chainId = useChainId();
-  const { data: balanceData } = useBalance({ address });
-  const { openConnectModal } = useConnectModal();
+  const wallet = useWallet();
+  const { connection } = useConnection();
 
-  const isCorrectChain = chainId === TESTNET_CHAIN_ID || chainId === MAINNET_CHAIN_ID;
-  const isTestnet = chainId === TESTNET_CHAIN_ID;
-  const isMainnet = chainId === MAINNET_CHAIN_ID;
+  const isTestnet = useMemo(() => {
+    if (typeof window === "undefined") return true;
+    return connection.rpcEndpoint.includes("devnet");
+  }, [connection.rpcEndpoint]);
 
-  // Bridge to ethers.js signer for existing contract code (SwarmOrchestrator, NadFunService, etc.)
-  const { provider, signer } = useMemo(() => {
-    if (typeof window === "undefined" || !isConnected || !address) {
-      return { provider: null, signer: null };
-    }
-    try {
-      if (!window.ethereum) return { provider: null, signer: null };
-      const p = new ethers.BrowserProvider(window.ethereum);
-      return { provider: p, signer: null };
-    } catch {
-      return { provider: null, signer: null };
-    }
-  }, [isConnected, address]);
+  const isMainnet = !isTestnet;
 
-  const balance = balanceData ? formatUnits(balanceData.value, balanceData.decimals) : null;
+  const balance = useMemo(() => {
+    if (!wallet.publicKey || wallet.balance === null) return null;
+    return wallet.balance / LAMPORTS_PER_SOL;
+  }, [wallet.publicKey, wallet.balance]);
 
   return {
-    address: address ?? null,
-    chainId,
+    address: wallet.publicKey?.toBase58() ?? null,
+    publicKey: wallet.publicKey,
     balance,
-    isConnecting,
-    isConnected,
-    isCorrectChain,
+    isConnecting: wallet.connecting,
+    isConnected: wallet.connected,
+    isCorrectChain: true, // Solana doesn't have chain switching like EVM
     isTestnet,
     isMainnet,
-    error: null,
-    provider,
-    signer,
-    connect: openConnectModal ?? (() => {}),
-    disconnect: () => {},
-    switchToMonad: () => {},
-    shortAddress: address
-      ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    error: wallet.error,
+    wallet: wallet.wallet,
+    connectedWallet: wallet.wallet,
+    connect: wallet.connect,
+    disconnect: wallet.disconnect,
+    switchToSolana: () => {}, // Not needed for Solana
+    shortAddress: wallet.publicKey
+      ? `${wallet.publicKey.toBase58().slice(0, 6)}...${wallet.publicKey.toBase58().slice(-4)}`
       : null,
   };
 }
 
 /**
- * Hook to get an ethers.js signer from wagmi's connected wallet.
- * Use this in components that need to pass a signer to SwarmOrchestrator or NadFunService.
+ * Hook to get a Solana connection and signer from the connected wallet.
+ * Use this in components that need to sign transactions or send instructions.
  */
-export function useEthersSigner() {
-  const { address, isConnected } = useAccount();
+export function useSolanaSigner() {
+  const wallet = useWallet();
+  const { connection } = useConnection();
 
   const getSigner = useMemo(() => {
-    if (typeof window === "undefined" || !window.ethereum || !isConnected || !address) {
+    if (!wallet.connected || !wallet.publicKey) {
       return async () => null;
     }
-    return async (): Promise<ethers.JsonRpcSigner | null> => {
+    return async (): Promise<{ publicKey: PublicKey; signTransaction: any } | null> => {
       try {
-        const provider = new ethers.BrowserProvider(window.ethereum!);
-        return await provider.getSigner();
+        if (!wallet.signTransaction) return null;
+        return {
+          publicKey: wallet.publicKey!,
+          signTransaction: wallet.signTransaction,
+        };
       } catch {
         return null;
       }
     };
-  }, [isConnected, address]);
+  }, [wallet.connected, wallet.publicKey, wallet.signTransaction]);
 
-  return { getSigner };
+  return { getSigner, connection, publicKey: wallet.publicKey };
 }

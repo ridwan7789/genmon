@@ -1,43 +1,68 @@
 "use client";
-import { ReactNode, useState } from "react";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { wagmiConfig } from "@/config/wagmi";
-import "@rainbow-me/rainbowkit/styles.css";
+import { ReactNode, useMemo } from "react";
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { PhantomWalletAdapter, SolflareWalletAdapter, BackpackWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl, PublicKey } from "@solana/web3.js";
+import "@solana/wallet-adapter-react-ui/styles.css";
 
-const customTheme = darkTheme({
-  accentColor: "#00FFFF",
-  accentColorForeground: "#0A0A0F",
-  borderRadius: "medium",
-  fontStack: "system",
-  overlayBlur: "small",
-});
-
-customTheme.colors.connectButtonBackground = "rgba(0, 255, 255, 0.08)";
-customTheme.colors.connectButtonInnerBackground = "rgba(0, 255, 255, 0.05)";
-customTheme.colors.modalBackground = "#0A0A0F";
-customTheme.colors.modalBorder = "rgba(191, 0, 255, 0.2)";
-customTheme.colors.profileForeground = "#0A0A0F";
-customTheme.colors.generalBorder = "rgba(255, 255, 255, 0.1)";
+// Custom styles for Solana wallet adapter
+const customStyles = `
+  .wallet-adapter-button {
+    background: linear-gradient(to right, rgba(0, 255, 255, 0.2), rgba(191, 0, 255, 0.2)) !important;
+    border: 1px solid rgba(0, 255, 255, 0.4) !important;
+    color: #00FFFF !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s !important;
+  }
+  .wallet-adapter-button:hover {
+    background: linear-gradient(to right, rgba(0, 255, 255, 0.3), rgba(191, 0, 255, 0.3)) !important;
+  }
+  .wallet-adapter-dropdown {
+    display: flex;
+    align-items: center;
+  }
+  .wallet-adapter-modal-wrapper {
+    background: #0A0A0F !important;
+    border: 1px solid rgba(191, 0, 255, 0.2) !important;
+    border-radius: 0.75rem !important;
+  }
+  .wallet-adapter-modal-title {
+    color: #ffffff !important;
+  }
+  .wallet-adapter-button-start {
+    color: #00FFFF !important;
+  }
+`;
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 2,
-        refetchOnWindowFocus: false,
-      },
-    },
-  }));
+  // Use Solana Devnet or Mainnet
+  const endpoint = useMemo(() => {
+    // Check if we should use mainnet (can be controlled via env var)
+    const useMainnet = process.env.NEXT_PUBLIC_SOLANA_MAINNET === "true";
+    return useMainnet 
+      ? "https://api.mainnet-beta.solana.com" 
+      : clusterApiUrl("devnet");
+  }, []);
+
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new BackpackWalletAdapter(),
+    ],
+    []
+  );
 
   return (
-    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={customTheme} modalSize="compact">
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+          <style>{customStyles}</style>
           {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
   );
 }
