@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { useAccount } from "wagmi";
+import { useWallet } from "@/hooks/useWallet";
 import { useGenmonStore } from "@/store/useGenmonStore";
 
 /**
@@ -8,7 +8,7 @@ import { useGenmonStore } from "@/store/useGenmonStore";
  * Syncs wallet address and reloads data when wallet changes.
  */
 export function useSupabaseInit() {
-  const { address } = useAccount();
+  const { address } = useWallet();
   const loadFromSupabase = useGenmonStore((s) => s.loadFromSupabase);
   const syncToSupabase = useGenmonStore((s) => s.syncToSupabase);
   const setWallet = useGenmonStore((s) => s.setWallet);
